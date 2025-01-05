@@ -53,7 +53,7 @@ export function CyclesContextProvider({
     setCycles((state) =>
       state.map((cycle) => {
         if (cycle.id === activeCycleId) {
-          return { ...cycle, cancelingDate: new Date() }
+          return { ...cycle, cancelDate: new Date() }
         } else {
           return cycle
         }

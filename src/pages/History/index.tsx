@@ -1,6 +1,11 @@
+import { useContext } from 'react'
 import { HistoryContainer, HistoryList, Status } from './styles'
+import { CyclesContext } from '../../contexts/CyclesContext'
+import { formatDistanceToNow } from 'date-fns'
 
 export function History() {
+  const { cycles } = useContext(CyclesContext)
+
   return (
     <HistoryContainer>
       <h1>Task history</h1>
@@ -15,30 +20,30 @@ export function History() {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Technical debit fixing</td>
-              <td>25 minutes</td>
-              <td>2 months ago</td>
-              <td>
-                <Status statusColor="green">Ongoing</Status>
-              </td>
-            </tr>
-            <tr>
-              <td>Technical debit fixing</td>
-              <td>25 minutes</td>
-              <td>2 months ago</td>
-              <td>
-                <Status statusColor="green">Ongoing</Status>
-              </td>
-            </tr>
-            <tr>
-              <td>Technical debit fixing</td>
-              <td>25 minutes</td>
-              <td>2 months ago</td>
-              <td>
-                <Status statusColor="green">Ongoing</Status>
-              </td>
-            </tr>
+            {cycles.map((cycle) => {
+              return (
+                <tr key={cycle.id}>
+                  <td>{cycle.task}</td>
+                  <td>{cycle.minuteAmount} minutes</td>
+                  <td>
+                    {formatDistanceToNow(cycle.startDate, {
+                      addSuffix: true,
+                    })}
+                  </td>
+                  <td>
+                    {cycle.completionDate && (
+                      <Status statusColor="green">Completed</Status>
+                    )}
+                    {cycle.cancelDate && (
+                      <Status statusColor="red">Canceled</Status>
+                    )}
+                    {!cycle.cancelDate && !cycle.completionDate && (
+                      <Status statusColor="yellow">Ongoing</Status>
+                    )}
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </HistoryList>
